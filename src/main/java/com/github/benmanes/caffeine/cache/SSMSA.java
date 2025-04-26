@@ -10,6 +10,12 @@ class SSMSA<K, V> extends SSMS<K, V> {
    volatile long expiresAfterAccessNanos;
    final Pacer pacer;
 
+   /**
+    *
+    * @param var1 maximumSize
+    * @param var2 expiry
+    * @param var3
+    */
    SSMSA(Caffeine<K, V> var1, @Nullable AsyncCacheLoader<? super K, V> var2, boolean var3) {
       super(var1, var2, var3);
       this.ticker = var1.getTicker();

@@ -760,7 +760,7 @@ abstract class BoundedLocalCache<K, V> extends BLCHeader.DrainStatusRef
    * the preference is to retain the main space's victims versus the window space's candidates on a
    * tie.
    *
-   * @param candidate the first candidate promoted into the probation space
+   * @param candidate the first candidate promoted into the probation space·
    */
   @GuardedBy("evictionLock")
   void evictFromMain(@Var @Nullable Node<K, V> candidate) {
@@ -1900,6 +1900,7 @@ abstract class BoundedLocalCache<K, V> extends BLCHeader.DrainStatusRef
         node.setPolicyWeight(node.getPolicyWeight() + weight);
 
         long maximum = maximum();
+        // used size is greater and equal than half of maximum
         if (weightedSize() >= (maximum >>> 1)) {
           if (weightedSize() > MAXIMUM_CAPACITY) {
             evictEntries();
@@ -1930,8 +1931,10 @@ abstract class BoundedLocalCache<K, V> extends BLCHeader.DrainStatusRef
         if (expiresVariable()) {
           timerWheel().schedule(node);
         }
+        //最近使用最少的条目在头部，最多的在末尾
         if (evicts()) {
           if (weight > maximum()) {
+            // 如果节点自身权重大到比缓存最大容量还大，直接驱逐它
             evictEntry(node, RemovalCause.SIZE, expirationTicker().read());
           } else if (weight > windowMaximum()) {
             accessOrderWindowDeque().offerFirst(node);

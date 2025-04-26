@@ -160,6 +160,10 @@ final class FrequencySketch<E> {
     int h2 = counterHash >>> 16;
     int h3 = counterHash >>> 24;
 
+    // index确定是在某个确定的slot中的位置
+    // slot指每个table中元素
+    // slot被分成了16组(0-15)，每组4个bit位
+    // 这里与15进行与运算，确保其指小于等于15
     int index0 = (h0 >>> 1) & 15;
     int index1 = (h1 >>> 1) & 15;
     int index2 = (h2 >>> 1) & 15;
@@ -206,6 +210,7 @@ final class FrequencySketch<E> {
    * @return if incremented
    */
   boolean incrementAt(int i, int j) {
+    // 4个元素为1组，这里要对j*4,通过位运算得到table[i]中第j个计数器当前值
     int offset = j << 2;
     long mask = (0xfL << offset);
     if ((table[i] & mask) != mask) {

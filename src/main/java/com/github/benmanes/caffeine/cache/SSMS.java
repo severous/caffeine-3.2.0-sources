@@ -4,8 +4,14 @@ import org.jspecify.annotations.Nullable;
 
 class SSMS<K, V> extends SS<K, V> {
    static final LocalCacheFactory FACTORY = SSMS::new;
+   /**
+    * 缓存项个数
+    */
    long maximum;
    long weightedSize;
+   /**
+    * 缓存项个数*0.01
+    */
    long windowMaximum;
    long windowWeightedSize;
    long mainProtectedMaximum;
@@ -42,6 +48,12 @@ class SSMS<K, V> extends SS<K, V> {
       return this.maximum;
    }
 
+
+   /**
+    * 初始化设置 在{@link BoundedLocalCache#setMaximumSize(long)}
+    * 缓存项个数
+    * @param var1
+    */
    @Override
    protected final void setMaximum(long var1) {
       this.maximum = var1;
